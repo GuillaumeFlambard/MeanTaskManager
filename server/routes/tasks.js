@@ -2,6 +2,20 @@ var express = require('express');
 var router = express.Router();
 var mongojs = require('mongojs');
 var db = mongojs('mongodb://guillaume:guillaume@ds145188.mlab.com:45188/sandbag_mean', ['tasks']);
+var passport = require('passport');
+
+console.log(passport);
+
+router.get('/redirection', function(req, res, next) {
+    res.send('yep !');
+});
+
+router.get('/profile', function (req, res, next) {
+    if (req.isAuthenticated()) {
+        return next()
+    }
+    res.redirect('/api/redirection')
+});
 
 //Get all tasks
 router.get('/tasks', function(req, res, next) {

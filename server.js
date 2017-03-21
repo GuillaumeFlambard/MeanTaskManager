@@ -3,11 +3,26 @@ const express = require('express');
 const path = require('path');
 const http = require('http');
 const bodyParser = require('body-parser');
+const passport = require('passport');
+const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
 
 // Get our API routes
 var tasks = require('./server/routes/tasks');
 
 const app = express();
+
+app.use(session({
+    store: new RedisStore({
+        url: "http://localhost:4200"
+    }),
+    secret: "thisisasecret",
+    resave: false,
+    saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Parsers for POST data
 app.use(bodyParser.json());
