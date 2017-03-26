@@ -4,10 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
-import { AppComponent } from './app.component';
+import { AppComponent } from './components/app/app.component';
 import { TasksComponent } from './components/tasks/tasks.component';
+import { UsersComponent } from './components/users/users.component';
 
 import { TasksService } from './services/tasks.service';
+import { UsersService } from './services/users.service'
 
 
 const ROUTES = [
@@ -25,7 +27,8 @@ const ROUTES = [
 @NgModule({
   declarations: [
     AppComponent,
-    TasksComponent
+    TasksComponent,
+    UsersComponent
   ],
   imports: [
     BrowserModule,
@@ -33,7 +36,7 @@ const ROUTES = [
     HttpModule,
     RouterModule.forRoot(ROUTES)
   ],
-  providers: [TasksService],
+  providers: [TasksService, UsersService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
