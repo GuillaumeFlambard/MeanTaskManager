@@ -16,9 +16,6 @@ export class UsersComponent implements OnInit {
     constructor(private usersService: UsersService) { }
 
     ngOnInit() {
-        // Retrieve tasks from the API
-        this.usersService.getAllTasks().subscribe(tasks => {
-            this.users = users
-        });
+        console.log('Init user')
     }
 }
