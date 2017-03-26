@@ -1,4 +1,3 @@
-// Get dependencies
 const express = require('express');
 const path = require('path');
 const http = require('http');
@@ -6,9 +5,8 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
-
-// Get our API routes
 var tasks = require('./server/routes/tasks');
+var users = require('./server/routes/users');
 
 const app = express();
 
@@ -33,6 +31,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 // Set our api routes
 app.use('/api', tasks);
+// app.use('/', users);
 
 // Catch all other routes and return the index file
 app.get('*', function(req, res) {

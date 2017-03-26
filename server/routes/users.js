@@ -6,5 +6,10 @@ var passport = require('passport');
 
 //Get all tasks
 router.get('/authentificate', function(req, res, next) {
-    var task = req.body;
+    console.log('authentificate', req);
+});
+
+//Get all tasks
+router.get('/', function(req, res, next) {
+    console.log('Is connected ?');
 });

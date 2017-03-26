@@ -5,9 +5,9 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
-import { TasksComponent } from './tasks/tasks.component';
+import { TasksComponent } from './components/tasks/tasks.component';
 
-import { TasksService } from './tasks.service';
+import { TasksService } from './services/tasks.service';
 
 
 const ROUTES = [
