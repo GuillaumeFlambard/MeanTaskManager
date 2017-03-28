@@ -31,7 +31,8 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 // Set our api routes
 app.use('/api', tasks);
-// app.use('/', users);
+app.use('/users/', users);
+
 
 // Catch all other routes and return the index file
 app.get('*', function(req, res) {

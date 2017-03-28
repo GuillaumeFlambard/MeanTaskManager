@@ -16,6 +16,21 @@ export class UsersComponent implements OnInit {
     constructor(private usersService: UsersService) { }
 
     ngOnInit() {
-        console.log('Init user')
+        console.log('Init user');
     }
+
+    loginAction (event) {
+        event.preventDefault();
+        var userLog = {
+            login: this.login,
+            password: this.password
+        };
+
+        this.usersService.login(userLog).subscribe(user => {
+            // this.tasks.push(task);
+            // this.title = "";
+            console.log('Callback login');
+        });
+    }
+
 }

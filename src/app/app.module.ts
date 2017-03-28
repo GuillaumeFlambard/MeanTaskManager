@@ -15,8 +15,12 @@ import { UsersService } from './services/users.service'
 const ROUTES = [
   {
     path: '',
-    redirectTo: 'tasks',
+    redirectTo: 'login',
     pathMatch: 'full'
+  },
+  {
+    path: 'login',
+    component: UsersComponent
   },
   {
     path: 'tasks',

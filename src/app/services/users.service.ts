@@ -10,10 +10,9 @@ export class UsersService {
   }
 
   login(user) {
-      console.log("login");
-  }
-
-  logout(user) {
-      console.log('logout');
+      var headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      return this.http.post('/users/login', JSON.stringify(user), {headers: headers})
+          .map(res => res.json());
   }
 }
