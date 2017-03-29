@@ -28,20 +28,37 @@ passport.use(new LocalStrategy({
     }
 ));
 
-router.post('/login',
+router.post('/login', function(req, res, next) {
     passport.authenticate('local', function(err, user, info) {
         console.log('err', err);
         console.log('user', user);
         console.log('info', info);
-        // if (err) { return next(err); }
-        // if (!user) { return res.redirect('/login'); }
+        if (err) { return next(err); }
+        if (!user) { return res.redirect('/login'); }
+
+        return res.redirect('/tasks');
         // req.logIn(user, function(err) {
         //     if (err) { return next(err); }
         //     return res.redirect('/users/' + user.username);
         // });
-    }), function(req, res) {
-
+    })(req, res, next);
 });
+//
+// router.post('/login', function(req, res, next) {
+//     passport.authenticate('local', function(err, user, info) {
+//         console.log('err', err);
+//         console.log('user', user);
+//         console.log('info', info);
+//         if (err) {
+//             return next(err);
+//         }
+//         if (!user) {
+//             return res.redirect('/login');
+//         }
+//
+//         return res.redirect('/tasks');
+//     })
+// }), function(req, res) {});
 
 //Get all tasks
 router.get('/', function(req, res, next) {

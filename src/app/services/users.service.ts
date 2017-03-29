@@ -13,6 +13,9 @@ export class UsersService {
       var headers = new Headers();
       headers.append('Content-Type', 'application/json');
       return this.http.post('/users/login', JSON.stringify(user), {headers: headers})
-          .map(res => res.json());
+          // .map(
+              // res => res.json()
+          // )
+      ;
   }
 }
