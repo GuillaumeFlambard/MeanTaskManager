@@ -1,13 +1,14 @@
 <form (submit)="loginAction($event)">
     <div>
         <label>Username:</label>
-        <input type="text" name="login" [(ngModel)]="login">
+        <input type="text" name="login" [(ngModel)]="login" required>
     </div>
     <div>
         <label>Password:</label>
-        <input type="password" name="password" [(ngModel)]="password">
+        <input type="password" name="password" [(ngModel)]="password" required>
     </div>
     <div>
         <input type="submit" value="Log In"/>
     </div>
 </form>
+<span class="alert alert-danger" [hidden]="!wrongMessage">{{ wrongMessage }}</span>

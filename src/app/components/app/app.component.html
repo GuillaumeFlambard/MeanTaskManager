@@ -1,4 +1,16 @@
-<div class="container">
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Task manager</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="active"><a href="#" (click)="logout($event)">Deconnection</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+<div class="container" id="pageCore">
   <h1>My tasks list</h1>
   <hr>
   <router-outlet></router-outlet>
