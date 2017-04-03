@@ -28,8 +28,8 @@ export class TasksService {
           .map(res => res.json());
   }
 
-  getAllTasks() {
-    return this.http.get('/api/tasks')
+  getAllTasks(page, pagecount) {
+    return this.http.get('/api/tasks/' + page + '/' + pagecount)
       .map(res => res.json());
   }
 }

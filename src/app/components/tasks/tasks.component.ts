@@ -16,7 +16,7 @@ export class TasksComponent implements OnInit {
 
   ngOnInit() {
     // Retrieve tasks from the API
-    this.tasksService.getAllTasks().subscribe(tasks => {
+    this.tasksService.getAllTasks(1, 10).subscribe(tasks => {
       this.tasks = tasks;
     });
   }
@@ -29,7 +29,7 @@ export class TasksComponent implements OnInit {
     };
 
     this.tasksService.addTask(newTask).subscribe(task => {
-      this.tasks.push(task);
+      this.tasks.unshift(task);
       this.title = "";
     });
   }
@@ -47,7 +47,7 @@ export class TasksComponent implements OnInit {
   }
 
   deleteTask(taskId) {
-    event.preventDefault();
+    // event.preventDefault();
 
     var tasks = this.tasks;
     this.tasksService.deleteTask(taskId).subscribe(data => {
