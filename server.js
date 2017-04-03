@@ -4,27 +4,28 @@ const http = require('http');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const session = require('express-session');
-const RedisStore = require('connect-redis')(session);
+// const RedisStore = require('connect-redis')(session);
 var tasks = require('./server/routes/tasks');
 var users = require('./server/routes/users');
 
 const app = express();
 
+// Parsers for POST data
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// app.use(bodyParser.urlencoded());
 app.use(session({
-    store: new RedisStore({
-        url: "http://localhost:4200"
-    }),
-    secret: "thisisasecret",
-    resave: false,
-    saveUninitialized: false
+    secret: 'keyboard cat'
+    ,
+    resave: true,
+    saveUninitialized: true
+    ,
+    cookie: { secure: true }
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
-
-// Parsers for POST data
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
 
 // Point static path to dist
 app.use(express.static(path.join(__dirname, 'dist')));
