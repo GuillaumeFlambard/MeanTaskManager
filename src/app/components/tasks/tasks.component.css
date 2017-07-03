@@ -1,0 +1,11 @@
+.filter {
+    display: inline-block;
+}
+
+.filterInput {
+    width: 80%;
+}
+
+.filterLabel {
+    width: 10%;
+}

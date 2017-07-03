@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TasksService } from '../../services/tasks.service';
 import { Task } from '../../../models/Task';
 import { Paginator } from '../../../models/Paginator';
+import { Filters } from '../../../models/Filters';
 
 @Component({
   selector: 'app-tasks',
@@ -19,12 +20,23 @@ export class TasksComponent implements OnInit {
   intervalEntriesMin: number;
   intervalEntriesMax: number;
   paginator: Paginator[] = [];
+  filters: Filters;
 
-  constructor(private tasksService: TasksService) {  }
+  constructor(private tasksService: TasksService) {
+  }
 
   ngOnInit() {
     // Retrieve tasks from the API
+    this.filters = {
+      title: '',
+      isDone: ''
+    };
     this.goToPage(1);
+  }
+
+  filtersAction(event) {
+    event.preventDefault();
+    console.log('Filters', this.filters);
   }
 
   goToPage(number) {

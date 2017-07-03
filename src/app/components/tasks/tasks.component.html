@@ -1,6 +1,17 @@
 <form class="well" (submit)="addTask($event)">
   <input [(ngModel)]="title" name="title" type="text" class="form-control" placeholder="Add task">
 </form>
+<form class="well" (submit)="filtersAction($event)">
+  <h3>Filter the list</h3>
+  <label for="filterTitle" class="filter filterLabel">Title</label>
+  <input id="filterTitle" [(ngModel)]="filters.title" [ngModelOptions]="{standalone: true}" type="text" class="filter filterInput form-control" placeholder="Enter task name"><br>
+  <label for="filterIsDone" class="filter filterLabel">Status</label>
+  <select id="filterIsDone" [(ngModel)]="filters.isDone" [ngModelOptions]="{standalone: true}" class="filter filterInput form-control">
+      <option value="">All</option>
+      <option value="1">Is done</option>
+      <option value="0">Is not done</option>
+  </select>
+</form>
 <div class="total result" *ngIf="tasks">
     <div class="col-lg-4 col-lg-offset-8">De {{ intervalEntriesMin }} à {{ intervalEntriesMax }} sur {{ totalEntries }}</div>
 </div>
