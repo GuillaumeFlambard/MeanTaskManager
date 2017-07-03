@@ -19,9 +19,9 @@
 </div>
 
 <ul class="pagination">
-  <li *ngFor="let page of createPagesNumber(numberPages)" [ngClass]="{'active': page == currentPage}" (click)="goToPage($event, page); false">
+  <li *ngFor="let page of paginator" [ngClass]="{'active': page.number == currentPage}" (click)="goToPage(page.number); false">
     <a href="#">
-      Page {{ page }}
+      Page {{ page.number }}
     </a>
   </li>
 </ul>

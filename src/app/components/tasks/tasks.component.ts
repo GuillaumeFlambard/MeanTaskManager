@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TasksService } from '../../services/tasks.service';
 import { Task } from '../../../models/Task';
+import { Paginator } from '../../../models/Paginator';
 
 @Component({
   selector: 'app-tasks',
@@ -17,20 +18,16 @@ export class TasksComponent implements OnInit {
   numberPages: number;
   intervalEntriesMin: number;
   intervalEntriesMax: number;
+  paginator: Paginator[] = [];
 
   constructor(private tasksService: TasksService) {  }
 
   ngOnInit() {
     // Retrieve tasks from the API
-    this.goToPage(null, 1);
+    this.goToPage(1);
   }
 
-  goToPage(event, number) {
-    if (event)
-    {
-      console.log('stopPropagation');
-      event.stopPropagation();
-    }
+  goToPage(number) {
     this.countPerPage = 10;
     this.currentPage = number;
 
@@ -42,18 +39,23 @@ export class TasksComponent implements OnInit {
       this.totalEntries = totalEntries;
       this.numberPages = totalEntries / this.countPerPage;
       this.intervalEntriesMax = this.currentPage * this.countPerPage;
+      if (this.intervalEntriesMax > this.totalEntries)
+      {
+        this.intervalEntriesMax = this.totalEntries;
+      }
       this.intervalEntriesMin = this.intervalEntriesMax - this.countPerPage + 1;
+      this.createPagesNumber(this.numberPages);
     });
   }
 
   createPagesNumber(number) {
     number = Math.ceil(number);
-    let pages: number[] = [];
+    let tmpPaginator = [];
     for(let i = 1; i <= number; i++){
-      pages.push(i);
+      tmpPaginator.push({ number:i });
     }
 
-    return pages;
+    this.paginator = tmpPaginator;
   }
 
   addTask(event) {
@@ -64,13 +66,21 @@ export class TasksComponent implements OnInit {
     };
 
     this.tasksService.addTask(newTask).subscribe(task => {
-      this.tasks.unshift(task);
+      if (this.currentPage == 1) {
+        this.tasks.unshift(task);
+      } else {
+        this.intervalEntriesMin--;
+      }
+      this.totalEntries++;
+      this.intervalEntriesMax++;
+
       this.title = "";
+      this.createPagesNumber(this.numberPages);
     });
   }
 
   updateStatus(task) {
-    var _task = {
+    let _task = {
       _id: task._id,
       title: task.title,
       isDone: !task.isDone
@@ -84,17 +94,20 @@ export class TasksComponent implements OnInit {
   deleteTask(taskId) {
     // event.preventDefault();
 
-    var tasks = this.tasks;
+    let tasks = this.tasks;
     this.tasksService.deleteTask(taskId).subscribe(data => {
       if (data.n == 1)
       {
-        for (var i = 0;i < tasks.length;i++) {
+        for (let i = 0;i < tasks.length;i++) {
             if (tasks[i]._id == taskId)
             {
               tasks.splice(i, 1);
+              this.intervalEntriesMax--;
             }
           }
       }
+      this.totalEntries--;
+      this.createPagesNumber(this.numberPages);
     });
   }
 }
