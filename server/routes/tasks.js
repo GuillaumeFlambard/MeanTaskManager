@@ -16,8 +16,8 @@ router.get('/tasks/count/all', function(req, res, next) {
 
 //Get all tasks
 router.get('/tasks/:page/:pagecount', function(req, res, next) {
-    console.log('Page', req.params.page);
-    console.log('PageCount', req.params.pagecount);
+    req.params.page--;
+
     db.tasks.find()
         .skip(req.params.page*req.params.pagecount)
         .limit(parseInt(req.params.pagecount))

@@ -2,7 +2,7 @@
   <input [(ngModel)]="title" name="title" type="text" class="form-control" placeholder="Add task">
 </form>
 <div class="total result" *ngIf="tasks">
-    <div class="col-lg-4 col-lg-offset-8">Total {{ tasks.length }}</div>
+    <div class="col-lg-4 col-lg-offset-8">De {{ intervalEntriesMin }} à {{ intervalEntriesMax }} sur {{ totalEntries }}</div>
 </div>
 <div class="task-list">
   <div *ngFor="let task of tasks">
@@ -19,13 +19,15 @@
 </div>
 
 <ul class="pagination">
-  <li *ngFor="let page of createPagesNumber(numberPages)" [ngClass]="{'active': page == currentPage}">
-    <a href="#">Page {{ page }}</a>
+  <li *ngFor="let page of createPagesNumber(numberPages)" [ngClass]="{'active': page == currentPage}" (click)="goToPage($event, page); false">
+    <a href="#">
+      Page {{ page }}
+    </a>
   </li>
 </ul>
 
 <div>
-  COUNT ALL ENTRIES : {{ countResult }}<br>
+  COUNT ALL ENTRIES : {{ totalEntries }}<br>
   Number Pages : {{ numberPages }}<br>
   Current page : {{ currentPage }}<br>
   Result per page : {{ countPerPage }}<br>

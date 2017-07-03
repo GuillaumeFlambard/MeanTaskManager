@@ -12,38 +12,53 @@ export class TasksComponent implements OnInit {
   tasks: Task[];
   title: string;
   countPerPage: number;
-  countResult: number;
+  totalEntries: number;
   currentPage: number;
   numberPages: number;
+  intervalEntriesMin: number;
+  intervalEntriesMax: number;
 
-  constructor(private tasksService: TasksService) { console.log('constructor'); }
+  constructor(private tasksService: TasksService) {  }
 
   ngOnInit() {
     // Retrieve tasks from the API
-    console.log('Init tasks');
+    this.goToPage(null, 1);
+  }
+
+  goToPage(event, number) {
+    if (event)
+    {
+      console.log('stopPropagation');
+      event.stopPropagation();
+    }
     this.countPerPage = 10;
-    this.currentPage = 1;
-    this.tasksService.getAllTasks(this.currentPage, this.countPerPage).subscribe(tasks => {
+    this.currentPage = number;
+
+    this.tasksService.getTasks(this.currentPage, this.countPerPage).subscribe(tasks => {
       this.tasks = tasks;
     });
 
-    this.tasksService.countAllTasks().subscribe(countResult => {
-      this.countResult = countResult;
-      this.numberPages = countResult/this.countPerPage;
+    this.tasksService.countAllTasks().subscribe(totalEntries => {
+      this.totalEntries = totalEntries;
+      this.numberPages = totalEntries / this.countPerPage;
+      this.intervalEntriesMax = this.currentPage * this.countPerPage;
+      this.intervalEntriesMin = this.intervalEntriesMax - this.countPerPage + 1;
     });
   }
 
   createPagesNumber(number) {
-    var pages: number[] = [];
-    for(var i = 1; i <= number; i++){
+    number = Math.ceil(number);
+    let pages: number[] = [];
+    for(let i = 1; i <= number; i++){
       pages.push(i);
     }
+
     return pages;
   }
 
   addTask(event) {
     event.preventDefault();
-    var newTask = {
+    let newTask = {
       title: this.title,
       isDone: false
     };
