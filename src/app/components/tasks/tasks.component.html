@@ -15,6 +15,19 @@
     <div class="col-lg-4">
       <input (click)="deleteTask(task._id)" type="button" value="delete" class="btn btn-danger">
     </div>
-    <br><br>
   </div>
 </div>
+
+<ul class="pagination">
+  <li *ngFor="let page of createPagesNumber(numberPages)" [ngClass]="{'active': page == currentPage}">
+    <a href="#">Page {{ page }}</a>
+  </li>
+</ul>
+
+<div>
+  COUNT ALL ENTRIES : {{ countResult }}<br>
+  Number Pages : {{ numberPages }}<br>
+  Current page : {{ currentPage }}<br>
+  Result per page : {{ countPerPage }}<br>
+</div>
+

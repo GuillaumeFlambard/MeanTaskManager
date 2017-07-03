@@ -5,7 +5,19 @@ var db = mongojs('mongodb://guillaume:guillaume@ds145188.mlab.com:45188/sandbag_
 var passport = require('passport');
 
 //Get all tasks
+router.get('/tasks/count/all', function(req, res, next) {
+    db.tasks.count(function (err, countResult) {
+        if (err){
+            res.send(err);
+        }
+        res.json(countResult);
+    });
+});
+
+//Get all tasks
 router.get('/tasks/:page/:pagecount', function(req, res, next) {
+    console.log('Page', req.params.page);
+    console.log('PageCount', req.params.pagecount);
     db.tasks.find()
         .skip(req.params.page*req.params.pagecount)
         .limit(parseInt(req.params.pagecount))

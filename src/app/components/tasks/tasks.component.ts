@@ -11,14 +11,34 @@ export class TasksComponent implements OnInit {
   // instantiate tasks to an empty object
   tasks: Task[];
   title: string;
+  countPerPage: number;
+  countResult: number;
+  currentPage: number;
+  numberPages: number;
 
-  constructor(private tasksService: TasksService) { }
+  constructor(private tasksService: TasksService) { console.log('constructor'); }
 
   ngOnInit() {
     // Retrieve tasks from the API
-    this.tasksService.getAllTasks(1, 10).subscribe(tasks => {
+    console.log('Init tasks');
+    this.countPerPage = 10;
+    this.currentPage = 1;
+    this.tasksService.getAllTasks(this.currentPage, this.countPerPage).subscribe(tasks => {
       this.tasks = tasks;
     });
+
+    this.tasksService.countAllTasks().subscribe(countResult => {
+      this.countResult = countResult;
+      this.numberPages = countResult/this.countPerPage;
+    });
+  }
+
+  createPagesNumber(number) {
+    var pages: number[] = [];
+    for(var i = 1; i <= number; i++){
+      pages.push(i);
+    }
+    return pages;
   }
 
   addTask(event) {

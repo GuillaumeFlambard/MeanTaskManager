@@ -9,8 +9,7 @@ import { TasksComponent } from './components/tasks/tasks.component';
 import { UsersComponent } from './components/users/users.component';
 
 import { TasksService } from './services/tasks.service';
-import { UsersService } from './services/users.service'
-
+import { UsersService } from './services/users.service';
 
 const ROUTES = [
   {

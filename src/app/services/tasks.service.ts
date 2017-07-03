@@ -29,7 +29,13 @@ export class TasksService {
   }
 
   getAllTasks(page, pagecount) {
+      console.log('pagecount service', pagecount);
     return this.http.get('/api/tasks/' + page + '/' + pagecount)
+      .map(res => res.json());
+  }
+
+  countAllTasks() {
+    return this.http.get('/api/tasks/count/all')
       .map(res => res.json());
   }
 }
