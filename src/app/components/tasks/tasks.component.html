@@ -8,9 +8,11 @@
   <label for="filterIsDone" class="filter filterLabel">Status</label>
   <select id="filterIsDone" [(ngModel)]="filters.isDone" [ngModelOptions]="{standalone: true}" class="filter filterInput form-control">
       <option value="">All</option>
-      <option value="1">Is done</option>
-      <option value="0">Is not done</option>
+      <option value=true>Is done</option>
+      <option value=false>Is not done</option>
   </select>
+  <br>
+  <input type="submit" class="btn">
 </form>
 <div class="total result" *ngIf="tasks">
     <div class="col-lg-4 col-lg-offset-8">De {{ intervalEntriesMin }} à {{ intervalEntriesMax }} sur {{ totalEntries }}</div>

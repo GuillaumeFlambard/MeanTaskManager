@@ -37,17 +37,18 @@ export class TasksComponent implements OnInit {
   filtersAction(event) {
     event.preventDefault();
     console.log('Filters', this.filters);
+    this.goToPage(1);
   }
 
   goToPage(number) {
     this.countPerPage = 10;
     this.currentPage = number;
 
-    this.tasksService.getTasks(this.currentPage, this.countPerPage).subscribe(tasks => {
+    this.tasksService.getTasks(this.currentPage, this.countPerPage, this.filters).subscribe(tasks => {
       this.tasks = tasks;
     });
 
-    this.tasksService.countAllTasks().subscribe(totalEntries => {
+    this.tasksService.countAllTasks(this.filters).subscribe(totalEntries => {
       this.totalEntries = totalEntries;
       this.numberPages = totalEntries / this.countPerPage;
       this.intervalEntriesMax = this.currentPage * this.countPerPage;

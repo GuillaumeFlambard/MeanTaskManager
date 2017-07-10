@@ -5,8 +5,9 @@ var db = mongojs('mongodb://guillaume:guillaume@ds145188.mlab.com:45188/sandbag_
 var passport = require('passport');
 
 //Get all tasks
-router.get('/tasks/count/all', function(req, res, next) {
-    db.tasks.count(function (err, countResult) {
+router.post('/tasks/count/filter', function(req, res, next) {
+    var filters = filtersTreatment(req.body.filters);
+    db.tasks.find(filters).count(function (err, countResult) {
         if (err){
             res.send(err);
         }
@@ -15,12 +16,16 @@ router.get('/tasks/count/all', function(req, res, next) {
 });
 
 //Get all tasks
-router.get('/tasks/:page/:pagecount', function(req, res, next) {
-    req.params.page--;
+router.post('/tasks/filter', function(req, res, next) {
+    var body = req.body;
+    var page = body.page;
+    page--;
+    var pageCount = body.pagecount;
+    var filters = filtersTreatment(body.filters);
 
-    db.tasks.find()
-        .skip(req.params.page*req.params.pagecount)
-        .limit(parseInt(req.params.pagecount))
+    db.tasks.find(filters)
+        .skip(page*pageCount)
+        .limit(parseInt(pageCount))
         .sort({_id: -1}
         , function (err, tasks) {
         if (err){
@@ -30,6 +35,21 @@ router.get('/tasks/:page/:pagecount', function(req, res, next) {
         // res.status(200).json(posts.data);
     });
 });
+
+function filtersTreatment(filters) {
+
+    var filtersTreat = {};
+
+    if (filters.isDone == 'true') {
+        filtersTreat.isDone = true;
+    }
+    else if (filters.isDone == 'false') {
+        filtersTreat.isDone = false;
+    }
+    filtersTreat.title = new RegExp(filters.title, 'i');
+
+    return filtersTreat;
+}
 
 //Get single task
 router.get('/task/:id', function(req, res, next) {

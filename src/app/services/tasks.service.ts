@@ -10,7 +10,7 @@ export class TasksService {
   }
 
   updateStatus(task) {
-      var headers = new Headers();
+      let headers = new Headers();
       headers.append('Content-Type', 'application/json');
       return this.http.put('/api/task/' + task._id, JSON.stringify(task), {headers: headers})
           .map(res => res.json());
@@ -22,19 +22,33 @@ export class TasksService {
   }
 
   addTask(task) {
-      var headers = new Headers();
+      let headers = new Headers();
       headers.append('Content-Type', 'application/json');
         return this.http.post('/api/task', JSON.stringify(task), {headers: headers})
           .map(res => res.json());
   }
 
-  getTasks(page, pagecount) {
-    return this.http.get('/api/tasks/' + page + '/' + pagecount)
+  getTasks(page, pagecount, filters) {
+    let body = {
+        'page': page,
+        'pagecount': pagecount,
+        'filters': filters
+    };
+
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.post('/api/tasks/filter', JSON.stringify(body), {headers: headers})
       .map(res => res.json());
   }
 
-  countAllTasks() {
-    return this.http.get('/api/tasks/count/all')
-      .map(res => res.json());
+  countAllTasks(filters) {
+      let body = {
+          'filters': filters
+      };
+
+      let headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      return this.http.post('/api/tasks/count/filter', JSON.stringify(body), {headers: headers})
+          .map(res => res.json());
   }
 }
