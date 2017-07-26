@@ -11,6 +11,9 @@ import { UsersComponent } from './components/users/users.component';
 import { TasksService } from './services/tasks.service';
 import { UsersService } from './services/users.service';
 
+import { SocketIoModule, SocketIoConfig } from 'ng2-socket-io';
+const config: SocketIoConfig = { url: 'http://localhost:4200', options: {} };
+
 const ROUTES = [
   {
     path: '',
@@ -37,6 +40,7 @@ const ROUTES = [
     BrowserModule,
     FormsModule,
     HttpModule,
+    SocketIoModule.forRoot(config),
     RouterModule.forRoot(ROUTES)
   ],
   providers: [TasksService, UsersService],

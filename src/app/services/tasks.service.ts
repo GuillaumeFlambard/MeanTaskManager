@@ -7,6 +7,11 @@ export class TasksService {
 
   constructor(private http: Http) {
     console.log('Tasks service initialize');
+
+      // var socket = io.connect('http://localhost:4200');
+      // socket.on('connect', function(data) {
+      //     socket.emit('join', 'Hello World from client');
+      // });
   }
 
   updateStatus(task) {

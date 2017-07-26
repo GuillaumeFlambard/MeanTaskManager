@@ -3,6 +3,7 @@ import { TasksService } from '../../services/tasks.service';
 import { Task } from '../../../models/Task';
 import { Paginator } from '../../../models/Paginator';
 import { Filters } from '../../../models/Filters';
+import { Socket } from 'ng2-socket-io';
 
 @Component({
   selector: 'app-tasks',
@@ -22,7 +23,8 @@ export class TasksComponent implements OnInit {
   paginator: Paginator[] = [];
   filters: Filters;
 
-  constructor(private tasksService: TasksService) {
+  constructor(private tasksService: TasksService, private socket: Socket) {
+
   }
 
   ngOnInit() {
@@ -57,6 +59,10 @@ export class TasksComponent implements OnInit {
         this.intervalEntriesMax = this.totalEntries;
       }
       this.intervalEntriesMin = this.intervalEntriesMax - this.countPerPage + 1;
+      if (this.intervalEntriesMin < 1)
+      {
+        this.intervalEntriesMin = 0;
+      }
       this.createPagesNumber(this.numberPages);
     });
   }
@@ -73,6 +79,7 @@ export class TasksComponent implements OnInit {
 
   addTask(event) {
     event.preventDefault();
+    this.socket.emit("hello_world", 'test');
     let newTask = {
       title: this.title,
       isDone: false
