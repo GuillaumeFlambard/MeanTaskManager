@@ -57,7 +57,6 @@ io.on('connection', function(socket){
     socket.on('newTask', function(task){
         console.log('task', task);
         io.emit('addTask', task);
-        socket.emit('addTask', task);
     });
 });
 
