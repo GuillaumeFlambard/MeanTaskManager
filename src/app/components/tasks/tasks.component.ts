@@ -34,6 +34,15 @@ export class TasksComponent implements OnInit {
       isDone: ''
     };
     this.goToPage(1);
+
+    this.listenerTask()
+  }
+
+  // Consume: on gist saved
+  listenerTask(){
+    this.socket.on('addTask', function(task: Task){
+      console.log('Task angular', task);
+    });
   }
 
   filtersAction(event) {
@@ -79,11 +88,11 @@ export class TasksComponent implements OnInit {
 
   addTask(event) {
     event.preventDefault();
-    this.socket.emit("hello_world", 'test');
     let newTask = {
       title: this.title,
       isDone: false
     };
+    this.socket.emit("newTask", newTask);
 
     this.tasksService.addTask(newTask).subscribe(task => {
       if (this.currentPage == 1) {

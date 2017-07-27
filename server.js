@@ -53,12 +53,11 @@ const server = http.createServer(app);
 const io = require('socket.io')(server);
 
 io.on('connection', function(socket){
-    console.log('Test');
-    io.emit("updateSocketList", 'boubou');
-    io.emit("addUserToSocketList",'re');
 
-    socket.on('hello_world', function(){
-        console.log('coucou');
+    socket.on('newTask', function(task){
+        console.log('task', task);
+        io.emit('addTask', task);
+        socket.emit('addTask', task);
     });
 });
 
