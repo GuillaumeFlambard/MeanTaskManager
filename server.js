@@ -3,26 +3,16 @@ const path = require('path');
 const http = require('http');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const session = require('express-session');
-// const RedisStore = require('connect-redis')(session);
 var tasks = require('./server/routes/tasks');
 var users = require('./server/routes/users');
-
 const app = express();
 
 // Parsers for POST data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// app.use(bodyParser.urlencoded());
-app.use(session({
-    secret: 'keyboard cat'
-    ,
-    resave: true,
-    saveUninitialized: true
-    ,
-    cookie: { secure: true }
-}));
+app.use(require('cookie-parser')());
+app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: true }));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -53,11 +43,7 @@ const server = http.createServer(app);
 const io = require('socket.io')(server);
 app.io = io;
 
-io.on('connection', function(socket){
-    // socket.on('newTask', function(task){
-    //     io.emit('addTask', task);
-    // });
-});
+io.on('connection', function(socket){});
 
 /**
  * Listen on provided port, on all network interfaces.

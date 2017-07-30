@@ -3,23 +3,21 @@ var router = express.Router();
 var mongojs = require('mongojs');
 var db = mongojs('mongodb://guillaume:guillaume@ds145188.mlab.com:45188/sandbag_mean', ['users']); //"sandbag_mean_01"
 var passport = require('passport');
-const session = require('express-session');
-// const RedisStore = require('connect-redis')(session);
-
-const app = express();
-
+// const session = require('express-session');
 const LocalStrategy = require('passport-local').Strategy;
+var app = express();
 
 passport.serializeUser(function(user, done) {
-    console.log('serializing user: ');
-    console.log(user);
+    console.log('serializing user: ', user);
     done(null, user._id);
 });
 
 passport.deserializeUser(function(id, done) {
-    db.users.find(id, function(err, user) {
-        console.log('no im not serial');
-        done(err, user);
+    console.log('deserializeUser id', id);
+    db.users.findOne({ _id: id }, function(err, user) {
+        if (err) { return done(err); }
+        console.log('deserializeUser done');
+        done(null, user);
     });
 });
 
@@ -28,7 +26,7 @@ passport.use(new LocalStrategy({
         passwordField: 'password'
     },
     function(username, password, done) {
-
+        console.log('LocalStrategy');
         db.users.findOne({ login: username }, function (err, user) {
 
             if (err) {
@@ -49,7 +47,6 @@ passport.use(new LocalStrategy({
 ));
 
 router.post('/login', function(req, res, next) {
-    console.log('req.session', req.session);
     passport.authenticate('local', function(err, user, info) {
         if (err) {
             return next(err);
@@ -58,6 +55,14 @@ router.post('/login', function(req, res, next) {
         if (!user) {
             return res.json({"status": false, "info": info});
         }
+
+        req.login(user, function(err) {
+            if (err) {
+                // return res.json({"status": false, "err": err});
+            }
+
+            // return res.json({"status": true, "user": user});
+        });
 
         return res.json({"status": true, "user": user});
     })(req, res, next);
