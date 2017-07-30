@@ -10,6 +10,7 @@ import { Socket } from 'ng2-socket-io';
   templateUrl: 'tasks.component.html',
   styleUrls: ['tasks.component.css']
 })
+
 export class TasksComponent implements OnInit {
   // instantiate tasks to an empty object
   tasks: Task[];
@@ -38,7 +39,9 @@ export class TasksComponent implements OnInit {
     this.listenerTask()
   }
 
-  // Consume: on gist saved
+  /**
+   * Listen emit from NodeJS to manage task
+   */
   listenerTask(){
     let that = this;
     this.socket.on('addTask', function(task: Task){
@@ -57,6 +60,10 @@ export class TasksComponent implements OnInit {
     this.goToPage(1);
   }
 
+  /**
+   * Management of pagination with filters
+   * @param number
+   */
   goToPage(number) {
     this.countPerPage = 10;
     this.currentPage = number;
@@ -82,6 +89,10 @@ export class TasksComponent implements OnInit {
     });
   }
 
+  /**
+   * Number and link to other task page
+   * @param number
+   */
   createPagesNumber(number) {
     number = Math.ceil(number);
     let tmpPaginator = [];
@@ -92,6 +103,10 @@ export class TasksComponent implements OnInit {
     this.paginator = tmpPaginator;
   }
 
+  /**
+   * Add task to mongoDB
+   * @param event
+   */
   addTask(event) {
     event.preventDefault();
     let newTask = {
@@ -104,6 +119,11 @@ export class TasksComponent implements OnInit {
     });
   }
 
+  /**
+   * Push a task to the task list. This function if call after the newTask emit from NodeJS
+   * @param task
+   * @param that
+   */
   pushNewTaskTolist(task, that) {
     if (that.currentPage == 1) {
       that.tasks.unshift(task);
@@ -115,6 +135,10 @@ export class TasksComponent implements OnInit {
     that.createPagesNumber(that.numberPages);
   }
 
+  /**
+   * To check or uncheck a task for mongoDB
+   * @param task
+   */
   updateStatus(task) {
     let _task = {
       _id: task._id,
@@ -127,6 +151,11 @@ export class TasksComponent implements OnInit {
     });
   }
 
+  /**
+   * Check or uncheck a task in the current task list. This function is call after an emit from NodeJS
+   * @param taskId
+   * @param that
+   */
   checkTask(taskId, that)
   {
     let tasks = that.tasks;
@@ -139,6 +168,10 @@ export class TasksComponent implements OnInit {
     }
   }
 
+  /**
+   * To delete a Task in mongoDB
+   * @param taskId
+   */
   deleteTask(taskId) {
     // event.preventDefault();
     this.tasksService.deleteTask(taskId).subscribe(data => {
@@ -146,6 +179,11 @@ export class TasksComponent implements OnInit {
     });
   }
 
+  /**
+   * To delete task in the current task list. This function is call after an emit from NodeJS
+   * @param taskId
+   * @param that
+   */
   spliceTask(taskId, that)
   {
     let tasks = that.tasks;
