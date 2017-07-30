@@ -64,6 +64,7 @@ router.get('/task/:id', function(req, res, next) {
 //Save task
 router.post('/task', function(req, res, next) {
     var task = req.body;
+    req.app.io.emit('addTask', task);
 
     if (!task.title || !(task.isDone + '')) {
         res.status(400);
@@ -82,6 +83,7 @@ router.post('/task', function(req, res, next) {
 
 //Delete task
 router.delete('/task/:id', function(req, res, next) {
+    req.app.io.emit('deleteTask', req.params.id);
     db.tasks.remove({_id: mongojs.ObjectId(req.params.id)}, function (err, task) {
         if (err){
             res.send(err);
@@ -93,6 +95,7 @@ router.delete('/task/:id', function(req, res, next) {
 //Update task
 router.put('/task/:id', function(req, res, next) {
     var task = req.body;
+    req.app.io.emit('checkTask', req.params.id);
     var updTask = {};
 
     if (task.isDone) {

@@ -51,13 +51,12 @@ app.set('port', port);
  */
 const server = http.createServer(app);
 const io = require('socket.io')(server);
+app.io = io;
 
 io.on('connection', function(socket){
-
-    socket.on('newTask', function(task){
-        console.log('task', task);
-        io.emit('addTask', task);
-    });
+    // socket.on('newTask', function(task){
+    //     io.emit('addTask', task);
+    // });
 });
 
 /**

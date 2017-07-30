@@ -40,14 +40,20 @@ export class TasksComponent implements OnInit {
 
   // Consume: on gist saved
   listenerTask(){
+    let that = this;
     this.socket.on('addTask', function(task: Task){
-      console.log('Task angular', task);
+      that.pushNewTaskTolist(task, that);
+    });
+    this.socket.on('deleteTask', function(idTask){
+      that.spliceTask(idTask, that);
+    });
+    this.socket.on('checkTask', function(idTask){
+      that.checkTask(idTask, that);
     });
   }
 
   filtersAction(event) {
     event.preventDefault();
-    console.log('Filters', this.filters);
     this.goToPage(1);
   }
 
@@ -92,20 +98,21 @@ export class TasksComponent implements OnInit {
       title: this.title,
       isDone: false
     };
-    this.socket.emit("newTask", newTask);
 
     this.tasksService.addTask(newTask).subscribe(task => {
-      if (this.currentPage == 1) {
-        this.tasks.unshift(task);
-      } else {
-        this.intervalEntriesMin--;
-      }
-      this.totalEntries++;
-      this.intervalEntriesMax++;
-
       this.title = "";
-      this.createPagesNumber(this.numberPages);
     });
+  }
+
+  pushNewTaskTolist(task, that) {
+    if (that.currentPage == 1) {
+      that.tasks.unshift(task);
+    } else {
+      that.intervalEntriesMin--;
+    }
+    that.totalEntries++;
+    that.intervalEntriesMax++;
+    that.createPagesNumber(that.numberPages);
   }
 
   updateStatus(task) {
@@ -116,27 +123,42 @@ export class TasksComponent implements OnInit {
     };
 
     this.tasksService.updateStatus(_task).subscribe(task => {
-      task.isDone = !task.isDone;
+
     });
+  }
+
+  checkTask(taskId, that)
+  {
+    let tasks = that.tasks;
+
+    for (let i = 0;i < tasks.length;i++) {
+      if (tasks[i]._id == taskId)
+      {
+        tasks[i].isDone = !tasks[i].isDone;
+      }
+    }
   }
 
   deleteTask(taskId) {
     // event.preventDefault();
-
-    let tasks = this.tasks;
     this.tasksService.deleteTask(taskId).subscribe(data => {
-      if (data.n == 1)
-      {
-        for (let i = 0;i < tasks.length;i++) {
-            if (tasks[i]._id == taskId)
-            {
-              tasks.splice(i, 1);
-              this.intervalEntriesMax--;
-            }
-          }
-      }
-      this.totalEntries--;
-      this.createPagesNumber(this.numberPages);
+
     });
+  }
+
+  spliceTask(taskId, that)
+  {
+    let tasks = that.tasks;
+
+    for (let i = 0;i < tasks.length;i++) {
+      if (tasks[i]._id == taskId)
+      {
+        tasks.splice(i, 1);
+        that.intervalEntriesMax--;
+      }
+    }
+
+    that.totalEntries--;
+    that.createPagesNumber(that.numberPages);
   }
 }
