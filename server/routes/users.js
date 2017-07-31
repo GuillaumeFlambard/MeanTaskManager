@@ -14,9 +14,10 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(function(id, done) {
     console.log('deserializeUser id', id);
-    db.users.findOne({ _id: id }, function(err, user) {
+    var ObjectId = require('mongodb').ObjectID;
+    db.users.find({ _id: ObjectId(id) }, function(err, user) {
         if (err) { return done(err); }
-        console.log('deserializeUser done');
+        console.log('deserializeUser done', user);
         done(null, user);
     });
 });

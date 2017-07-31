@@ -65,6 +65,7 @@ router.get('/task/:id', function(req, res, next) {
 router.post('/task', function(req, res, next) {
     var task = req.body;
     req.app.io.emit('addTask', task);
+    console.log('req.user', req.user);
 
     if (!task.title || !(task.isDone + '')) {
         res.status(400);
