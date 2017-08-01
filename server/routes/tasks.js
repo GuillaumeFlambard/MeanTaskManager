@@ -3,10 +3,11 @@ var router = express.Router();
 var mongojs = require('mongojs');
 var db = mongojs('mongodb://guillaume:guillaume@ds145188.mlab.com:45188/sandbag_mean', ['tasks']);
 var passport = require('passport');
+var ObjectId = require('mongodb').ObjectID;
 
 //Get all tasks
 router.post('/tasks/count/filter', function(req, res, next) {
-    var filters = filtersTreatment(req.body.filters);
+    var filters = filtersTreatment(req.body.filters, req.user[0]._id);
     db.tasks.find(filters).count(function (err, countResult) {
         if (err){
             res.send(err);
@@ -21,7 +22,7 @@ router.post('/tasks/filter', function(req, res, next) {
     var page = body.page;
     page--;
     var pageCount = body.pagecount;
-    var filters = filtersTreatment(body.filters);
+    var filters = filtersTreatment(body.filters, req.user[0]._id);
 
     db.tasks.find(filters)
         .skip(page*pageCount)
@@ -36,9 +37,10 @@ router.post('/tasks/filter', function(req, res, next) {
     });
 });
 
-function filtersTreatment(filters) {
+function filtersTreatment(filters, user_id) {
 
     var filtersTreat = {};
+    filtersTreat.user_id = ObjectId(user_id);
 
     if (filters.isDone == 'true') {
         filtersTreat.isDone = true;
@@ -64,8 +66,8 @@ router.get('/task/:id', function(req, res, next) {
 //Save task
 router.post('/task', function(req, res, next) {
     var task = req.body;
+    task.user_id = ObjectId(req.user[0]._id);
     req.app.io.emit('addTask', task);
-    console.log('req.user', req.user);
 
     if (!task.title || !(task.isDone + '')) {
         res.status(400);
