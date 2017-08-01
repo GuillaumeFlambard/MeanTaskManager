@@ -9,10 +9,30 @@ export class UsersService {
     console.log('Users service initialize');
   }
 
+  isAuthenticate() {
+      var headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      return this.http.get('/users/is/authenticate', {headers: headers})
+          .map(
+              res => res.json()
+          )
+      ;
+  }
+
   login(user) {
       var headers = new Headers();
       headers.append('Content-Type', 'application/json');
       return this.http.post('/users/login', JSON.stringify(user), {headers: headers})
+          .map(
+              res => res.json()
+          )
+      ;
+  }
+
+  logout() {
+      var headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      return this.http.get('/users/logout', {headers: headers})
           .map(
               res => res.json()
           )

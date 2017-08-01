@@ -27,7 +27,6 @@ passport.use(new LocalStrategy({
         passwordField: 'password'
     },
     function(username, password, done) {
-        console.log('LocalStrategy');
         db.users.findOne({ login: username }, function (err, user) {
 
             if (err) {
@@ -46,6 +45,16 @@ passport.use(new LocalStrategy({
         });
     }
 ));
+
+router.get('/is/authenticate', function(req, res, next) {
+    var user = req.user;
+    if (user)
+    {
+        user = user[0];
+    }
+
+    return res.json({"user": user});
+});
 
 router.post('/login', function(req, res, next) {
     passport.authenticate('local', function(err, user, info) {
@@ -67,6 +76,12 @@ router.post('/login', function(req, res, next) {
 
         return res.json({"status": true, "user": user});
     })(req, res, next);
+});
+
+router.get('/logout', function(req, res, next) {
+    req.logout();
+
+    return res.json({"success": true});
 });
 
 module.exports = router;

@@ -20,6 +20,13 @@ export class UsersComponent implements OnInit {
 
     ngOnInit() {
         console.log('Init user');
+        this.usersService.isAuthenticate().subscribe(user => {
+            if (Object.keys(user).length != 0)
+            {
+                console.log('user', user);
+                this.router.navigate(['tasks']);
+            }
+        });
     }
 
     loginAction (event) {
