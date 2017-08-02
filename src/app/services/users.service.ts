@@ -29,6 +29,16 @@ export class UsersService {
       ;
   }
 
+  registration(user) {
+      var headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      return this.http.post('/users/registration', JSON.stringify(user), {headers: headers})
+          .map(
+              res => res.json()
+          )
+      ;
+  }
+
   logout() {
       var headers = new Headers();
       headers.append('Content-Type', 'application/json');

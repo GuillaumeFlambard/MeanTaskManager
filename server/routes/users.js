@@ -57,6 +57,10 @@ router.get('/is/authenticate', function(req, res, next) {
 });
 
 router.post('/login', function(req, res, next) {
+    authentification();
+});
+
+function authentification() {
     passport.authenticate('local', function(err, user, info) {
         if (err) {
             return next(err);
@@ -76,6 +80,18 @@ router.post('/login', function(req, res, next) {
 
         return res.json({"status": true, "user": user});
     })(req, res, next);
+}
+
+router.post('/registration', function(req, res, next) {
+    var user = req.body;
+    db.users.save(user, function (err, user) {
+        if (err) {
+            res.send(err);
+        }
+
+        authentification();
+        res.json(user);
+    });
 });
 
 router.get('/logout', function(req, res, next) {

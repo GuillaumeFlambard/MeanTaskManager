@@ -15,6 +15,9 @@ export class UsersComponent implements OnInit {
     login: string;
     password: string;
     wrongMessage: string;
+    loginRegistration: string;
+    passwordRegistration: string;
+    wrongMessageRegistration: string;
 
     constructor(private usersService: UsersService, private router:Router) { }
 
@@ -43,6 +46,24 @@ export class UsersComponent implements OnInit {
             else {
                 this.password = "";
                 this.wrongMessage = response.info.message;
+            }
+        });
+    }
+
+    registrationAction (event) {
+        event.preventDefault();
+        var user = {
+            login: this.loginRegistration,
+            password: this.passwordRegistration
+        };
+
+        this.usersService.registration(user).subscribe(response => {
+            if (response.status) {
+                this.router.navigate(['tasks']);
+            }
+            else {
+                this.passwordRegistration = "";
+                this.wrongMessageRegistration = response.info.message;
             }
         });
     }
