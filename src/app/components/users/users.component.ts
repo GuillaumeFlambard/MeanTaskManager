@@ -58,12 +58,13 @@ export class UsersComponent implements OnInit {
         };
 
         this.usersService.registration(user).subscribe(response => {
-            if (response.status) {
+            console.log('response', response);
+            if (response.status == 'success') {
                 this.router.navigate(['tasks']);
             }
             else {
                 this.passwordRegistration = "";
-                this.wrongMessageRegistration = response.info.message;
+                this.wrongMessageRegistration = response.message;
             }
         });
     }

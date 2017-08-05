@@ -27,6 +27,7 @@ passport.use(new LocalStrategy({
         passwordField: 'password'
     },
     function(username, password, done) {
+    console.log("informations", username, password);
         db.users.findOne({ login: username }, function (err, user) {
 
             if (err) {
@@ -57,10 +58,10 @@ router.get('/is/authenticate', function(req, res, next) {
 });
 
 router.post('/login', function(req, res, next) {
-    authentification();
+    authentification(req, res, next);
 });
 
-function authentification() {
+function authentification(req, res, next) {
     passport.authenticate('local', function(err, user, info) {
         if (err) {
             return next(err);
@@ -83,14 +84,28 @@ function authentification() {
 }
 
 router.post('/registration', function(req, res, next) {
-    var user = req.body;
-    db.users.save(user, function (err, user) {
+    var currentUser = req.body;
+    console.log('currentUser', currentUser);
+    db.users.findOne({ login: currentUser.login }, function (err, user) {
+
         if (err) {
-            res.send(err);
+            return res.send(err);
         }
 
-        authentification();
-        res.json(user);
+        if (user) {
+            console.log('Login already exist...');
+            return res.json({ status:'fail', message: 'Login already used.' });
+        } else {
+            console.log('Fail find someone');
+            db.users.save(currentUser, function (err, user) {
+                if (err)
+                {
+                    return res.json({ status:'fail' });
+                }
+                authentification(req, res, next);
+                return res.json({ status:'success' });
+            });
+        }
     });
 });
 
