@@ -59,7 +59,7 @@ export class UsersComponent implements OnInit {
 
         this.usersService.registration(user).subscribe(response => {
             console.log('response', response);
-            if (response.status == 'success') {
+            if (response.status) {
                 this.router.navigate(['tasks']);
             }
             else {

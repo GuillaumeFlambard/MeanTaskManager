@@ -94,7 +94,7 @@ router.post('/registration', function(req, res, next) {
 
         if (user) {
             console.log('Login already exist...');
-            return res.json({ status:'fail', message: 'Login already used.' });
+            return res.json({ status: false, message: 'Login already used.' });
         } else {
             console.log('Fail find someone');
             db.users.save(currentUser, function (err, user) {
@@ -102,8 +102,7 @@ router.post('/registration', function(req, res, next) {
                 {
                     return res.json({ status:'fail' });
                 }
-                authentification(req, res, next);
-                return res.json({ status:'success' });
+                return authentification(req, res, next);
             });
         }
     });
