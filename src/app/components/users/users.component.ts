@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersService } from '../../services/users.service';
 import { User } from '../../../models/User';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-users',
     templateUrl: 'users.component.html',
-    styleUrls: ['users.component.css']
+    styleUrls: ['users.component.css'],
 })
 
 export class UsersComponent implements OnInit {
 
     users: User[];
+    currentUser: User;
     login: string;
     password: string;
     wrongMessage: string;
@@ -23,10 +24,15 @@ export class UsersComponent implements OnInit {
 
     ngOnInit() {
         console.log('Init user');
+        this.isAuthenticate();
+    }
+
+    isAuthenticate () {
         this.usersService.isAuthenticate().subscribe(user => {
             if (Object.keys(user).length != 0)
             {
-                console.log('user', user);
+                this.currentUser = user.user;
+                this.usersService.setUser(user.user);
                 this.router.navigate(['tasks']);
             }
         });
@@ -34,6 +40,7 @@ export class UsersComponent implements OnInit {
 
     loginAction (event) {
         event.preventDefault();
+
         var userLog = {
             login: this.login,
             password: this.password
@@ -41,6 +48,7 @@ export class UsersComponent implements OnInit {
 
         this.usersService.login(userLog).subscribe(response => {
             if (response.status) {
+                this.usersService.setUser(response.user);
                 this.router.navigate(['tasks']);
             }
             else {

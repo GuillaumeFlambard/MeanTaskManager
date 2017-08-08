@@ -1,7 +1,7 @@
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">Task manager</a>
+      <a class="navbar-brand" href="#">Task manager - {{ user.login }}</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
@@ -13,5 +13,7 @@
 <div class="container" id="pageCore">
   <h1>My tasks list</h1>
   <hr>
-  <router-outlet></router-outlet>
+  <router-outlet>
+  </router-outlet>
+  <!--<app-users [share]="username"></app-users>-->
 </div>
