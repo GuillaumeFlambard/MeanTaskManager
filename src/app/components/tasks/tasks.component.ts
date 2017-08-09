@@ -4,11 +4,14 @@ import { Task } from '../../../models/Task';
 import { Paginator } from '../../../models/Paginator';
 import { Filters } from '../../../models/Filters';
 import { Socket } from 'ng2-socket-io';
+import { CanActivate } from '@angular/router';
+import { UsersService } from '../../services/users.service';
 
 @Component({
   selector: 'app-tasks',
   templateUrl: 'tasks.component.html',
-  styleUrls: ['tasks.component.css']
+  styleUrls: ['tasks.component.css'],
+  providers: [UsersService]
 })
 
 export class TasksComponent implements OnInit {
@@ -24,8 +27,20 @@ export class TasksComponent implements OnInit {
   paginator: Paginator[] = [];
   filters: Filters;
 
-  constructor(private tasksService: TasksService, private socket: Socket) {
+  constructor(private usersService:UsersService, private tasksService: TasksService, private socket: Socket) {
 
+  }
+
+
+  canActivate() {
+    return this.usersService.isAuthenticate().subscribe(user => {
+      if (Object.keys(user).length != 0)
+      {
+        return true;
+      }
+
+      return false;
+    });
   }
 
   ngOnInit() {
