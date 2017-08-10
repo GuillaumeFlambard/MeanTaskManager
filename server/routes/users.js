@@ -8,16 +8,13 @@ const LocalStrategy = require('passport-local').Strategy;
 var app = express();
 
 passport.serializeUser(function(user, done) {
-    console.log('serializing user: ', user);
     done(null, user._id);
 });
 
 passport.deserializeUser(function(id, done) {
-    console.log('deserializeUser id', id);
     var ObjectId = require('mongodb').ObjectID;
     db.users.find({ _id: ObjectId(id) }, function(err, user) {
         if (err) { return done(err); }
-        console.log('deserializeUser done', user);
         done(null, user);
     });
 });
@@ -27,7 +24,6 @@ passport.use(new LocalStrategy({
         passwordField: 'password'
     },
     function(username, password, done) {
-    console.log("informations", username, password);
         db.users.findOne({ login: username }, function (err, user) {
 
             if (err) {
@@ -85,7 +81,6 @@ function authentification(req, res, next) {
 
 router.post('/registration', function(req, res, next) {
     var currentUser = req.body;
-    console.log('currentUser', currentUser);
     db.users.findOne({ login: currentUser.login }, function (err, user) {
 
         if (err) {
@@ -93,10 +88,8 @@ router.post('/registration', function(req, res, next) {
         }
 
         if (user) {
-            console.log('Login already exist...');
             return res.json({ status: false, message: 'Login already used.' });
         } else {
-            console.log('Fail find someone');
             db.users.save(currentUser, function (err, user) {
                 if (err)
                 {

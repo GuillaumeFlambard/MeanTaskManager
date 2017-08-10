@@ -5,15 +5,12 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
-        <li class="active"><a href="#" (click)="logoutAction($event)">Deconnection</a></li>
+        <li class="active"><a href="#" (click)="logoutAction($event)">Sign out</a></li>
       </ul>
     </div><!--/.nav-collapse -->
   </div>
 </nav>
 <div class="container" id="pageCore">
-  <h1>My tasks list</h1>
-  <hr>
   <router-outlet>
   </router-outlet>
-  <!--<app-users [share]="username"></app-users>-->
 </div>

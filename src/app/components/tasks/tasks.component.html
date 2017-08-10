@@ -1,32 +1,30 @@
 <form class="well" (submit)="addTask($event)">
-  <input [(ngModel)]="title" name="title" type="text" class="form-control" placeholder="Add task">
+  <h3 class="titles">Add task : </h3>
+  <input [(ngModel)]="title" name="title" type="text" class="inputs form-control" placeholder="Add task">
 </form>
 <form class="well" (submit)="filtersAction($event)">
-  <h3>Filter the list</h3>
-  <label for="filterTitle" class="filter filterLabel">Title</label>
-  <input id="filterTitle" [(ngModel)]="filters.title" [ngModelOptions]="{standalone: true}" type="text" class="filter filterInput form-control" placeholder="Enter task name"><br>
-  <label for="filterIsDone" class="filter filterLabel">Status</label>
-  <select id="filterIsDone" [(ngModel)]="filters.isDone" [ngModelOptions]="{standalone: true}" class="filter filterInput form-control">
-      <option value="">All</option>
+  <h3 class="titles">Filters : </h3>
+  <input id="filterTitle" [(ngModel)]="filters.title" [ngModelOptions]="{standalone: true}" type="text" class="inputs filters form-control" placeholder="Enter task name">
+  <select id="filterIsDone" [(ngModel)]="filters.isDone" [ngModelOptions]="{standalone: true}" class="inputs filters form-control">
+      <option value="">Select a status</option>
       <option value=true>Is done</option>
       <option value=false>Is not done</option>
   </select>
-  <br>
-  <input type="submit" class="btn">
+  <input type="submit" class="btn submitButtons">
 </form>
 <div class="total result" *ngIf="tasks">
-    <div class="col-lg-4 col-lg-offset-8">De {{ intervalEntriesMin }} à {{ intervalEntriesMax }} sur {{ totalEntries }}</div>
+    <div class="col-lg-4 col-lg-offset-8">From {{ intervalEntriesMin }} to {{ intervalEntriesMax }} on {{ totalEntries }} entries</div>
 </div>
 <div class="task-list">
-  <div *ngFor="let task of tasks">
-    <div class="col-md-1">
+  <div *ngFor="let task of tasks" class="row">
+    <div class="col-lg-1">
       <input type="checkbox" [checked]="task.isDone" (click)="updateStatus(task)">
     </div>
     <div class="col-lg-7">
       {{ task.title }}
     </div>
     <div class="col-lg-4">
-      <input (click)="deleteTask(task._id)" type="button" value="delete" class="btn btn-danger">
+      <span class="glyphicon glyphicon-remove removeIcons" (click)="deleteTask(task._id)"></span>
     </div>
   </div>
 </div>
@@ -38,11 +36,3 @@
     </a>
   </li>
 </ul>
-
-<div>
-  COUNT ALL ENTRIES : {{ totalEntries }}<br>
-  Number Pages : {{ numberPages }}<br>
-  Current page : {{ currentPage }}<br>
-  Result per page : {{ countPerPage }}<br>
-</div>
-

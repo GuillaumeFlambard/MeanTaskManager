@@ -6,6 +6,7 @@ const passport = require('passport');
 var tasks = require('./server/routes/tasks');
 var users = require('./server/routes/users');
 const app = express();
+var allClients = [];
 
 // Parsers for POST data
 app.use(bodyParser.json());
@@ -43,7 +44,7 @@ const server = http.createServer(app);
 const io = require('socket.io')(server);
 app.io = io;
 
-io.on('connection', function(socket){});
+io.sockets.on('connection', function(socket) {});
 
 /**
  * Listen on provided port, on all network interfaces.

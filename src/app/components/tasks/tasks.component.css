@@ -1,11 +1,27 @@
-.filter {
+.titles {
+    margin-top: 0;
+    margin-bottom: 0;
     display: inline-block;
 }
 
-.filterInput {
-    width: 80%;
+.inputs {
+    width: 30%;
+    margin-right: 5px;
+    display: inline-block;
 }
 
-.filterLabel {
-    width: 10%;
+.submitButtons {
+    display: inline-block;
+    float: right;
+    background-color: #337AB7;
+    color: #ffffff;
+}
+
+.removeIcons {
+    color: #e74c3c;
+}
+
+.removeIcons:hover {
+    color: #e74c3c;
+    text-shadow: 0 0 1px #e74c3c;
 }

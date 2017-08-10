@@ -32,16 +32,16 @@ export class TasksComponent implements OnInit {
   }
 
 
-  canActivate() {
-    return this.usersService.isAuthenticate().subscribe(user => {
-      if (Object.keys(user).length != 0)
-      {
-        return true;
-      }
-
-      return false;
-    });
-  }
+  // canActivate() {
+  //   return this.usersService.isAuthenticate().subscribe(user => {
+  //     if (Object.keys(user).length != 0)
+  //     {
+  //       return true;
+  //     }
+  //
+  //     return false;
+  //   });
+  // }
 
   ngOnInit() {
     // Retrieve tasks from the API
