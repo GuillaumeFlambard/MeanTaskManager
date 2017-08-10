@@ -6,6 +6,7 @@ import { Filters } from '../../../models/Filters';
 import { Socket } from 'ng2-socket-io';
 import { CanActivate } from '@angular/router';
 import { UsersService } from '../../services/users.service';
+import {User} from "../../../models/User";
 
 @Component({
   selector: 'app-tasks',
@@ -26,11 +27,12 @@ export class TasksComponent implements OnInit {
   intervalEntriesMax: number;
   paginator: Paginator[] = [];
   filters: Filters;
+  user: User;
 
   constructor(private usersService:UsersService, private tasksService: TasksService, private socket: Socket) {
-
+    this.user = new User;
+    this.user = this.usersService.getCurrentUserValue();
   }
-
 
   // canActivate() {
   //   return this.usersService.isAuthenticate().subscribe(user => {
@@ -62,11 +64,11 @@ export class TasksComponent implements OnInit {
     this.socket.on('addTask', function(task: Task){
       that.pushNewTaskTolist(task, that);
     });
-    this.socket.on('deleteTask', function(idTask){
-      that.spliceTask(idTask, that);
+    this.socket.on('deleteTask', function(task){
+      that.spliceTask(task, that);
     });
-    this.socket.on('checkTask', function(idTask){
-      that.checkTask(idTask, that);
+    this.socket.on('checkTask', function(task){
+      that.checkTask(task, that);
     });
   }
 
@@ -140,14 +142,18 @@ export class TasksComponent implements OnInit {
    * @param that
    */
   pushNewTaskTolist(task, that) {
-    if (that.currentPage == 1) {
-      that.tasks.unshift(task);
-    } else {
-      that.intervalEntriesMin--;
+    console.log('pushNewTaskTolist', this.user);
+    if (task.user_id == this.user._id)
+    {
+      if (that.currentPage == 1) {
+        that.tasks.unshift(task);
+      } else {
+        that.intervalEntriesMin--;
+      }
+      that.totalEntries++;
+      that.intervalEntriesMax++;
+      that.createPagesNumber(that.numberPages);
     }
-    that.totalEntries++;
-    that.intervalEntriesMax++;
-    that.createPagesNumber(that.numberPages);
   }
 
   /**
@@ -168,17 +174,20 @@ export class TasksComponent implements OnInit {
 
   /**
    * Check or uncheck a task in the current task list. This function is call after an emit from NodeJS
-   * @param taskId
+   * @param task
    * @param that
    */
-  checkTask(taskId, that)
+  checkTask(task, that)
   {
-    let tasks = that.tasks;
+    if (task.user_id == this.user._id)
+    {
+      let tasks = that.tasks;
 
-    for (let i = 0;i < tasks.length;i++) {
-      if (tasks[i]._id == taskId)
-      {
-        tasks[i].isDone = !tasks[i].isDone;
+      for (let i = 0;i < tasks.length;i++) {
+        if (tasks[i]._id == task._id)
+        {
+          tasks[i].isDone = !tasks[i].isDone;
+        }
       }
     }
   }
@@ -196,22 +205,25 @@ export class TasksComponent implements OnInit {
 
   /**
    * To delete task in the current task list. This function is call after an emit from NodeJS
-   * @param taskId
+   * @param task
    * @param that
    */
-  spliceTask(taskId, that)
+  spliceTask(task, that)
   {
-    let tasks = that.tasks;
+    if (task.user_id == this.user._id)
+    {
+      let tasks = that.tasks;
 
-    for (let i = 0;i < tasks.length;i++) {
-      if (tasks[i]._id == taskId)
-      {
-        tasks.splice(i, 1);
-        that.intervalEntriesMax--;
+      for (let i = 0;i < tasks.length;i++) {
+        if (tasks[i]._id == task._id)
+        {
+          tasks.splice(i, 1);
+          that.intervalEntriesMax--;
+        }
       }
-    }
 
-    that.totalEntries--;
-    that.createPagesNumber(that.numberPages);
+      that.totalEntries--;
+      that.createPagesNumber(that.numberPages);
+    }
   }
 }

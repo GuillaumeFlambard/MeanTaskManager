@@ -8,19 +8,24 @@ import {User} from "../../models/User";
 @Injectable()
 export class UsersService {
     private subject: Subject<User> = new Subject<User>();
-    private user: User;
+    static user: User;
 
   constructor(private http: Http) {
     console.log('Users service initialize');
   }
 
     setUser(user: User): void {
-        this.user = user;
+        UsersService.user = user;
         this.subject.next(user);
     }
 
     getUser(): Observable<User> {
         return this.subject.asObservable();
+    }
+
+    getCurrentUserValue() {
+      console.log('Call success', UsersService.user);
+      return UsersService.user;
     }
 
   isAuthenticate() {
