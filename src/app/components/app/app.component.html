@@ -1,13 +1,11 @@
-<nav class="navbar navbar-default navbar-fixed-top">
-  <div class="container">
-    <div class="navbar-header">
+<nav id="navBarHeader" class="navbar navbar-default">
+  <div class="containe">
+    <div class="navbar-header col-lg-8 col-md-8 col-sm-8 col-xs-8">
       <a class="navbar-brand" href="#">Task manager - {{ user.login }}</a>
     </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav navbar-right">
-        <li class="active"><a href="#" (click)="logoutAction($event)">Sign out</a></li>
-      </ul>
-    </div><!--/.nav-collapse -->
+    <ul class="nav navbar-nav col-lg-4 col-md-4 col-sm-4 col-xs-4">
+        <li class="active pull-right"><a href="#" (click)="logoutAction($event)">Sign out</a></li>
+    </ul>
   </div>
 </nav>
 <div class="container" id="pageCore">

@@ -19,6 +19,7 @@
 
 .removeIcons {
     color: #e74c3c;
+    float: right;
 }
 
 .removeIcons:hover {

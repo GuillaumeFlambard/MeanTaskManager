@@ -12,27 +12,31 @@
   </select>
   <input type="submit" class="btn submitButtons">
 </form>
-<div class="total result" *ngIf="tasks">
-    <div class="col-lg-4 col-lg-offset-8">From {{ intervalEntriesMin }} to {{ intervalEntriesMax }} on {{ totalEntries }} entries</div>
+<div class="total result row" *ngIf="tasks">
+    <div class="col-md-12"><div class="pull-right">From {{ intervalEntriesMin }} to {{ intervalEntriesMax }} on {{ totalEntries }} entries</div></div>
 </div>
 <div class="task-list">
   <div *ngFor="let task of tasks" class="row">
-    <div class="col-lg-1">
+    <div class="col-md-1 col-md-offset-1 col-sm-1 col-sm-offset-1 col-xs-1 col-xs-offset-1">
       <input type="checkbox" [checked]="task.isDone" (click)="updateStatus(task)">
     </div>
-    <div class="col-lg-7">
+    <div class="col-md-5 col-sm-5 col-xs-5">
       {{ task.title }}
     </div>
-    <div class="col-lg-4">
+    <div class="col-md-3 col-sm-3 col-xs-3">
       <span class="glyphicon glyphicon-remove removeIcons" (click)="deleteTask(task._id)"></span>
     </div>
   </div>
 </div>
 
-<ul class="pagination">
-  <li *ngFor="let page of paginator" [ngClass]="{'active': page.number == currentPage}" (click)="goToPage(page.number); false">
-    <a href="#">
-      Page {{ page.number }}
-    </a>
-  </li>
-</ul>
+<div class="row">
+  <div class="col-md-12">
+    <ul class="pagination">
+      <li *ngFor="let page of paginator" [ngClass]="{'active': page.number == currentPage}" (click)="goToPage(page.number); false">
+        <a href="#">
+          Page {{ page.number }}
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
