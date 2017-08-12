@@ -88,6 +88,7 @@ router.post('/task', function(req, res, next) {
 router.delete('/task/:id', function(req, res, next) {
     var task = {'id': req.params.id, 'user_id': ObjectId(req.user[0]._id)};
     req.app.io.emit('deleteTask', task);
+    console.log('emitDeleteTask', task);
     db.tasks.remove({_id: mongojs.ObjectId(req.params.id)}, function (err, task) {
         if (err){
             res.send(err);

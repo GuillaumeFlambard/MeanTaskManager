@@ -209,13 +209,12 @@ export class TasksComponent implements OnInit {
    */
   spliceTask(task, that)
   {
-    if (task.user_id == this.user._id)
-    {
+    console.log('task.user_id', task.user_id, 'this.user._id', this.user._id);
+    if (task.user_id == this.user._id) {
       let tasks = that.tasks;
 
       for (let i = 0;i < tasks.length;i++) {
-        if (tasks[i]._id == task._id)
-        {
+        if (tasks[i]._id == task.id) {
           tasks.splice(i, 1);
           that.intervalEntriesMax--;
         }
