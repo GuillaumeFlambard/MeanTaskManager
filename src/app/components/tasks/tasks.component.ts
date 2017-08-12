@@ -142,7 +142,6 @@ export class TasksComponent implements OnInit {
    * @param that
    */
   pushNewTaskTolist(task, that) {
-    console.log('pushNewTaskTolist', this.user);
     if (task.user_id == this.user._id)
     {
       if (that.currentPage == 1) {
