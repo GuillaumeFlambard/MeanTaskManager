@@ -7,10 +7,16 @@ var passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 var app = express();
 
+/**
+ * Passport serialize user
+ */
 passport.serializeUser(function(user, done) {
     done(null, user._id);
 });
 
+/**
+ * Passport deserialize user
+ */
 passport.deserializeUser(function(id, done) {
     var ObjectId = require('mongodb').ObjectID;
     db.users.find({ _id: ObjectId(id) }, function(err, user) {
@@ -19,6 +25,9 @@ passport.deserializeUser(function(id, done) {
     });
 });
 
+/**
+ * Passport declaration of the local strategy
+ */
 passport.use(new LocalStrategy({
         usernameField: 'login',
         passwordField: 'password'
@@ -30,10 +39,12 @@ passport.use(new LocalStrategy({
                 return done(err);
             }
 
+            // If there is not user with this login
             if (!user) {
                 return done(null, false, { message: 'Incorrect username.' });
             }
 
+            // If the password doesn't match
             if (user.password != password) {
                 return done(null, false, { message: 'Incorrect password.' });
             }
@@ -43,6 +54,9 @@ passport.use(new LocalStrategy({
     }
 ));
 
+/**
+ * Check if there is a user already connected
+ */
 router.get('/is/authenticate', function(req, res, next) {
     var user = req.user;
     if (user)
@@ -53,10 +67,19 @@ router.get('/is/authenticate', function(req, res, next) {
     return res.json({"user": user});
 });
 
+/**
+ * Login action
+ */
 router.post('/login', function(req, res, next) {
     authentification(req, res, next);
 });
 
+/**
+ * Try to authentificate the user
+ * @param req
+ * @param res
+ * @param next
+ */
 function authentification(req, res, next) {
     passport.authenticate('local', function(err, user, info) {
         if (err) {
@@ -79,6 +102,10 @@ function authentification(req, res, next) {
     })(req, res, next);
 }
 
+/**
+ * Registration action
+ * If the registration succed try to connect the user
+ */
 router.post('/registration', function(req, res, next) {
     var currentUser = req.body;
     db.users.findOne({ login: currentUser.login }, function (err, user) {
@@ -101,6 +128,9 @@ router.post('/registration', function(req, res, next) {
     });
 });
 
+/**
+ * Logout action
+ */
 router.get('/logout', function(req, res, next) {
     req.logout();
 

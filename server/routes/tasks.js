@@ -5,7 +5,9 @@ var db = mongojs('mongodb://guillaume:guillaume@ds145188.mlab.com:45188/sandbag_
 var passport = require('passport');
 var ObjectId = require('mongodb').ObjectID;
 
-//Get all tasks
+/**
+ * Count all tasks with filters
+ */
 router.post('/tasks/count/filter', function(req, res, next) {
     var filters = filtersTreatment(req.body.filters, req.user[0]._id);
     db.tasks.find(filters).count(function (err, countResult) {
@@ -16,7 +18,9 @@ router.post('/tasks/count/filter', function(req, res, next) {
     });
 });
 
-//Get all tasks
+/**
+ * Get tasks with filter and pagination
+ */
 router.post('/tasks/filter', function(req, res, next) {
     var body = req.body;
     var page = body.page;
@@ -37,8 +41,14 @@ router.post('/tasks/filter', function(req, res, next) {
     });
 });
 
+/**
+ * Format filter data
+ * Insert current user_id in filters
+ * @param filters
+ * @param user_id
+ * @returns {{}}
+ */
 function filtersTreatment(filters, user_id) {
-
     var filtersTreat = {};
     filtersTreat.user_id = ObjectId(user_id);
 
@@ -53,7 +63,9 @@ function filtersTreatment(filters, user_id) {
     return filtersTreat;
 }
 
-//Get single task
+/**
+ * Get single task by id
+ */
 router.get('/task/:id', function(req, res, next) {
     db.tasks.findOne({_id: mongojs.ObjectId(req.params.id)}, function (err, task) {
         if (err){
@@ -63,7 +75,10 @@ router.get('/task/:id', function(req, res, next) {
     });
 });
 
-//Save task
+/**
+ * Save task with current user_id
+ * Emit instructions
+ */
 router.post('/task', function(req, res, next) {
     var task = req.body;
     task.user_id = ObjectId(req.user[0]._id);
@@ -84,7 +99,10 @@ router.post('/task', function(req, res, next) {
     }
 });
 
-//Delete task
+/**
+ * Delete task
+ * Emit instructions
+ */
 router.delete('/task/:id', function(req, res, next) {
     var task = {'id': req.params.id, 'user_id': ObjectId(req.user[0]._id)};
     req.app.io.emit('deleteTask', task);
@@ -96,7 +114,9 @@ router.delete('/task/:id', function(req, res, next) {
     });
 });
 
-//Update task
+/**
+ * Update task with id
+ */
 router.put('/task/:id', function(req, res, next) {
     var task = req.body;
     task.user_id = ObjectId(req.user[0]._id);
