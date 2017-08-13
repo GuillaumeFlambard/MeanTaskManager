@@ -1,29 +1,63 @@
-<form (submit)="loginAction($event)">
-    <div>
-        <label>Username: </label>
-        <input type="text" name="login" [(ngModel)]="login" required>
+<div class="row" id="coreUser">
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+        This little project is a task manager. You have your own space to create your own tasks.<br>
+        Features list :
+        <ul>
+            <li>Sign In</li>
+            <li>Login</li>
+            <li>Log out</li>
+            <li>Create task</li>
+            <li>Mark task done</li>
+            <li>Delete task</li>
+            <li>Filter system</li>
+            <li>Paginator system</li>
+            <li>Live syncronisation system</li>
+        </ul>
+        Technologies list :
+        <ul>
+            <li>NodeJS</li>
+            <li>Express</li>
+            <li>Passport</li>
+            <li>MongoDB</li>
+            <li>Angular2</li>
+            <li>HTML5</li>
+            <li>CSS3</li>
+        </ul>
     </div>
-    <div>
-        <label>Password:</label>
-        <input type="password" name="password" [(ngModel)]="password" required>
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+        <form (submit)="loginAction($event)" class="pull-right userForms">
+            <div>
+                <label>Username</label><br>
+                <input class="widthStandard" type="text" name="login" [(ngModel)]="login" required>
+            </div>
+            <div>
+                <label>Password</label><br>
+                <input class="widthStandard" type="password" name="password" [(ngModel)]="password" required>
+            </div>
+            <div>
+                <input class="btn submitButtons widthStandard" type="submit" value="Log In"/>
+            </div>
+            <div class="errorMessages">
+                <span class="alert alert-danger" [hidden]="!wrongMessage">{{ wrongMessage }}</span>
+            </div>
+        </form>
     </div>
-    <div>
-        <input type="submit" value="Log In"/>
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+        <form (submit)="registrationAction($event)" class="userForms">
+            <div>
+                <label>Username</label><br>
+                <input class="widthStandard" type="text" name="login" [(ngModel)]="loginRegistration" required>
+            </div>
+            <div>
+                <label>Password</label><br>
+                <input class="widthStandard" type="password" name="password" [(ngModel)]="passwordRegistration" required>
+            </div>
+            <div>
+                <input class="btn submitButtons widthStandard" type="submit" value="Submit"/>
+            </div>
+            <div class="errorMessages">
+                <span class="alert alert-danger" [hidden]="!wrongMessageRegistration">{{ wrongMessageRegistration }}</span>
+            </div>
+        </form>
     </div>
-</form>
-<span class="alert alert-danger" [hidden]="!wrongMessage">{{ wrongMessage }}</span>
-
-<form (submit)="registrationAction($event)">
-    <div>
-        <label>Username:</label>
-        <input type="text" name="login" [(ngModel)]="loginRegistration" required>
-    </div>
-    <div>
-        <label>Password:</label>
-        <input type="password" name="password" [(ngModel)]="passwordRegistration" required>
-    </div>
-    <div>
-        <input type="submit" value="Submit"/>
-    </div>
-</form>
-<span class="alert alert-danger" [hidden]="!wrongMessageRegistration">{{ wrongMessageRegistration }}</span>
+</div>
