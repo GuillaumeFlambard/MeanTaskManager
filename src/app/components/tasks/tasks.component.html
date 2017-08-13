@@ -1,6 +1,6 @@
 <form class="well" (submit)="addTask($event)">
   <h3 class="titles">Add task : </h3>
-  <input [(ngModel)]="title" name="title" type="text" class="inputs form-control" placeholder="Add task">
+  <input [(ngModel)]="title" name="title" type="text" class="inputs form-control" placeholder="Add task" required>
 </form>
 <form class="well" (submit)="filtersAction($event)">
   <h3 class="titles">Filters : </h3>

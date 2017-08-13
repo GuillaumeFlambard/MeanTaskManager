@@ -12,6 +12,15 @@ export class UsersService {
 
   constructor(private http: Http) {
     console.log('Users service initialize');
+    this.isAuthenticate().subscribe(user => {
+        if (Object.keys(user).length != 0)
+        {
+            console.log('Set user', user.user);
+            this.setUser(user.user);
+            // this.usersService.setUser(user.user);
+            // this.router.navigate(['tasks']);
+        }
+    });
   }
 
     setUser(user: User): void {

@@ -30,8 +30,7 @@ export class TasksComponent implements OnInit {
   user: User;
 
   constructor(private usersService:UsersService, private tasksService: TasksService, private socket: Socket) {
-    this.user = new User;
-    this.user = this.usersService.getCurrentUserValue();
+    console.log('Construct task');
   }
 
   // canActivate() {
@@ -46,14 +45,23 @@ export class TasksComponent implements OnInit {
   // }
 
   ngOnInit() {
-    // Retrieve tasks from the API
+    console.log('Task init');
     this.filters = {
       title: '',
       isDone: ''
     };
     this.goToPage(1);
+    this.listenerTask();
+    this.user = new User;
+    this.user = this.usersService.getCurrentUserValue();
+    this.listenerUserService();
+  }
 
-    this.listenerTask()
+
+  listenerUserService() {
+    this.usersService.getUser().subscribe((user: User) => {
+      this.user = user;
+    });
   }
 
   /**

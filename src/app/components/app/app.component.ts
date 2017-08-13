@@ -29,6 +29,7 @@ export class AppComponent {
   logoutAction (event) {
     event.preventDefault();
     this.usersService.logout().subscribe(response => {
+      this.user = new User;
       this.router.navigate(['login']);
     });
   }

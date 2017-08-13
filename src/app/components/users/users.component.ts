@@ -20,7 +20,9 @@ export class UsersComponent implements OnInit {
     passwordRegistration: string;
     wrongMessageRegistration: string;
 
-    constructor(private usersService: UsersService, private router:Router) { }
+    constructor(private usersService: UsersService, private router:Router) {
+        console.log('Construct user');
+    }
 
     ngOnInit() {
         console.log('Init user');
