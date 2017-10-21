@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongojs = require('mongojs');
 var db = mongojs('mongodb://guillaume:guillaume@ds145188.mlab.com:45188/sandbag_mean', ['users']); //"sandbag_mean_01"
+var dbUser = require('./users.model');
 var passport = require('passport');
 // const session = require('express-session');
 const LocalStrategy = require('passport-local').Strategy;
@@ -19,7 +20,7 @@ passport.serializeUser(function(user, done) {
  */
 passport.deserializeUser(function(id, done) {
     var ObjectId = require('mongodb').ObjectID;
-    db.users.find({ _id: ObjectId(id) }, function(err, user) {
+    dbUser.find({ _id: ObjectId(id) }, function(err, user) {
         if (err) { return done(err); }
         done(null, user);
     });
@@ -33,7 +34,7 @@ passport.use(new LocalStrategy({
         passwordField: 'password'
     },
     function(username, password, done) {
-        db.users.findOne({ login: username }, function (err, user) {
+        dbUser.findOne({ login: username }, function (err, user) {
 
             if (err) {
                 return done(err);
@@ -108,7 +109,8 @@ function authentification(req, res, next) {
  */
 router.post('/registration', function(req, res, next) {
     var currentUser = req.body;
-    db.users.findOne({ login: currentUser.login }, function (err, user) {
+    console.log('registration currentUser', currentUser);
+    dbUser.findOne({ login: currentUser.login }, function (err, user) {
 
         if (err) {
             return res.send(err);
@@ -117,9 +119,9 @@ router.post('/registration', function(req, res, next) {
         if (user) {
             return res.json({ status: false, message: 'Login already used.' });
         } else {
-            db.users.save(currentUser, function (err, user) {
-                if (err)
-                {
+            dbUser.create(currentUser, function (err, user) {
+                console.log('dbUser.create err', err);
+                if (err) {
                     return res.json({ status:'fail' });
                 }
                 return authentification(req, res, next);

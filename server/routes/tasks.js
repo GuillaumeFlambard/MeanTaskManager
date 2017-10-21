@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongojs = require('mongojs');
 var db = mongojs('mongodb://guillaume:guillaume@ds145188.mlab.com:45188/sandbag_mean', ['tasks']);
+var dbTask = require('./tasks.model');
 var passport = require('passport');
 var ObjectId = require('mongodb').ObjectID;
 
@@ -10,7 +11,7 @@ var ObjectId = require('mongodb').ObjectID;
  */
 router.post('/tasks/count/filter', function(req, res, next) {
     var filters = filtersTreatment(req.body.filters, req.user[0]._id);
-    db.tasks.find(filters).count(function (err, countResult) {
+    dbTask.find(filters).count(function (err, countResult) {
         if (err){
             res.send(err);
         }
@@ -28,17 +29,17 @@ router.post('/tasks/filter', function(req, res, next) {
     var pageCount = body.pagecount;
     var filters = filtersTreatment(body.filters, req.user[0]._id);
 
-    db.tasks.find(filters)
+    dbTask.find(filters)
         .skip(page*pageCount)
         .limit(parseInt(pageCount))
-        .sort({_id: -1}
-        , function (err, tasks) {
-        if (err){
-            res.send(err);
-        }
-        res.json(tasks);
-        // res.status(200).json(posts.data);
-    });
+        .sort({_id: -1}).exec(
+            function (err, tasks) {
+                if (err){
+                    res.send(err);
+                }
+                res.json(tasks);
+                // res.status(200).json(posts.data);
+            });
 });
 
 /**
@@ -67,7 +68,7 @@ function filtersTreatment(filters, user_id) {
  * Get single task by id
  */
 router.get('/task/:id', function(req, res, next) {
-    db.tasks.findOne({_id: mongojs.ObjectId(req.params.id)}, function (err, task) {
+    dbTask.findOne({_id: mongojs.ObjectId(req.params.id)}, function (err, task) {
         if (err){
             res.send(err);
         }
@@ -89,7 +90,7 @@ router.post('/task', function(req, res, next) {
             "error": "Bad Data"
         });
     } else {
-        db.tasks.save(task, function (err, task) {
+        dbTask.create(task, function (err, task) {
             if (err) {
                 res.send(err);
             }
@@ -106,7 +107,7 @@ router.post('/task', function(req, res, next) {
 router.delete('/task/:id', function(req, res, next) {
     var task = {'id': req.params.id, 'user_id': ObjectId(req.user[0]._id)};
     req.app.io.emit('deleteTask', task);
-    db.tasks.remove({_id: mongojs.ObjectId(req.params.id)}, function (err, task) {
+    dbTask.remove({_id: mongojs.ObjectId(req.params.id)}, function (err, task) {
         if (err){
             res.send(err);
         }
@@ -141,7 +142,7 @@ router.put('/task/:id', function(req, res, next) {
             "error":"Bad Data"
         });
     } else {
-        db.tasks.update({_id: mongojs.ObjectId(req.params.id)}, updTask, {}, function (err, task) {
+        dbTask.update({_id: mongojs.ObjectId(req.params.id)}, updTask, {}, function (err, task) {
             if (err){
                 res.send(err);
             }

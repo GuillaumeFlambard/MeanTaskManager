@@ -6,11 +6,15 @@ const passport = require('passport');
 var tasks = require('./server/routes/tasks');
 var users = require('./server/routes/users');
 const app = express();
+var mongoose = require('mongoose');
 var allClients = [];
 
 // Parsers for POST data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+// Connect to database
+mongoose.connect('mongodb://localhost/medicationreminder');
 
 app.use(require('cookie-parser')());
 app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: true }));
