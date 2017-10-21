@@ -70,6 +70,7 @@ export class TasksComponent implements OnInit {
   listenerTask(){
     let that = this;
     this.socket.on('addTask', function(task: Task){
+      console.log('pushNewTaskTolist', task);
       that.pushNewTaskTolist(task, that);
     });
     this.socket.on('deleteTask', function(task){
@@ -150,7 +151,7 @@ export class TasksComponent implements OnInit {
    * @param that
    */
   pushNewTaskTolist(task, that) {
-    if (task.user_id == this.user._id)
+    if (task.user == this.user._id)
     {
       if (that.currentPage == 1) {
         that.tasks.unshift(task);
@@ -186,7 +187,7 @@ export class TasksComponent implements OnInit {
    */
   checkTask(task, that)
   {
-    if (task.user_id == this.user._id)
+    if (task.user == this.user._id)
     {
       let tasks = that.tasks;
 
@@ -217,8 +218,7 @@ export class TasksComponent implements OnInit {
    */
   spliceTask(task, that)
   {
-    console.log('task.user_id', task.user_id, 'this.user._id', this.user._id);
-    if (task.user_id == this.user._id) {
+    if (task.user == this.user._id) {
       let tasks = that.tasks;
 
       for (let i = 0;i < tasks.length;i++) {

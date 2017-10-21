@@ -1,7 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var mongojs = require('mongojs');
-var db = mongojs('mongodb://guillaume:guillaume@ds145188.mlab.com:45188/sandbag_mean', ['tasks']);
 var dbTask = require('./tasks.model');
 var passport = require('passport');
 var ObjectId = require('mongodb').ObjectID;
@@ -51,7 +49,7 @@ router.post('/tasks/filter', function(req, res, next) {
  */
 function filtersTreatment(filters, user_id) {
     var filtersTreat = {};
-    filtersTreat.user_id = ObjectId(user_id);
+    filtersTreat.user = ObjectId(user_id);
 
     if (filters.isDone == 'true') {
         filtersTreat.isDone = true;
@@ -68,7 +66,7 @@ function filtersTreatment(filters, user_id) {
  * Get single task by id
  */
 router.get('/task/:id', function(req, res, next) {
-    dbTask.findOne({_id: mongojs.ObjectId(req.params.id)}, function (err, task) {
+    dbTask.findOne({_id: ObjectId(req.params.id)}, function (err, task) {
         if (err){
             res.send(err);
         }
@@ -77,12 +75,12 @@ router.get('/task/:id', function(req, res, next) {
 });
 
 /**
- * Save task with current user_id
+ * Save task with current user
  * Emit instructions
  */
 router.post('/task', function(req, res, next) {
     var task = req.body;
-    task.user_id = ObjectId(req.user[0]._id);
+    task.user = ObjectId(req.user[0]._id);
 
     if (!task.title || !(task.isDone + '')) {
         res.status(400);
@@ -105,9 +103,9 @@ router.post('/task', function(req, res, next) {
  * Emit instructions
  */
 router.delete('/task/:id', function(req, res, next) {
-    var task = {'id': req.params.id, 'user_id': ObjectId(req.user[0]._id)};
+    var task = {'id': req.params.id, 'user': ObjectId(req.user[0]._id)};
     req.app.io.emit('deleteTask', task);
-    dbTask.remove({_id: mongojs.ObjectId(req.params.id)}, function (err, task) {
+    dbTask.remove({_id: ObjectId(req.params.id)}, function (err, task) {
         if (err){
             res.send(err);
         }
@@ -120,7 +118,7 @@ router.delete('/task/:id', function(req, res, next) {
  */
 router.put('/task/:id', function(req, res, next) {
     var task = req.body;
-    task.user_id = ObjectId(req.user[0]._id);
+    task.user = ObjectId(req.user[0]._id);
     req.app.io.emit('checkTask', task);
     var updTask = {};
 
@@ -133,7 +131,7 @@ router.put('/task/:id', function(req, res, next) {
     }
 
     if (req.user.length > 0) {
-        updTask.user_id =  ObjectId(req.user[0]._id);
+        updTask.user =  ObjectId(req.user[0]._id);
     }
 
     if (!updTask) {
@@ -142,7 +140,7 @@ router.put('/task/:id', function(req, res, next) {
             "error":"Bad Data"
         });
     } else {
-        dbTask.update({_id: mongojs.ObjectId(req.params.id)}, updTask, {}, function (err, task) {
+        dbTask.update({_id: ObjectId(req.params.id)}, updTask, {}, function (err, task) {
             if (err){
                 res.send(err);
             }

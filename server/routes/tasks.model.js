@@ -3,7 +3,8 @@ var mongoose = require('mongoose'),
 
 var Task = new Schema({
     title: String,
-    isDone: Boolean
+    isDone: Boolean,
+    user: { type: Schema.Types.ObjectId, ref: 'User' }
 });
 
 module.exports = mongoose.model('Task', Task);
