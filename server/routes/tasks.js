@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var dbTask = require('./tasks.model');
+var dbTask = require('./../models/tasks.model.js');
 var passport = require('passport');
 var ObjectId = require('mongodb').ObjectID;
 

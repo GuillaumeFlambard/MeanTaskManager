@@ -3,8 +3,8 @@ const path = require('path');
 const http = require('http');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-var tasks = require('./server/routes/tasks');
-var users = require('./server/routes/users');
+var tasks = require('./routes/tasks');
+var users = require('./routes/users');
 const app = express();
 var mongoose = require('mongoose');
 var allClients = [];
@@ -23,7 +23,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Point static path to dist
-app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static(path.join(__dirname, '../dist')));
 
 // Set our api routes
 app.use('/api', tasks);
@@ -32,7 +32,7 @@ app.use('/users/', users);
 
 // Catch all other routes and return the index file
 app.get('*', function(req, res) {
-  res.sendFile(path.join(__dirname, 'dist/index.html'));
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
 /**
