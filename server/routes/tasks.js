@@ -4,6 +4,19 @@ var dbTask = require('./../models/tasks.model.js');
 var passport = require('passport');
 var ObjectId = require('mongodb').ObjectID;
 
+function requireLogin(req, res, next) {
+    console.log(req.user);
+    if (typeof req.user !== "undefined") {
+        next();
+    } else {
+        res.json({'status':'notConnected'});
+    }
+}
+
+router.all("/tasks/*", requireLogin, function(req, res, next) {
+    next();
+});
+
 /**
  * Count all tasks with filters
  */
@@ -13,7 +26,7 @@ router.post('/tasks/count/filter', function(req, res, next) {
         if (err){
             res.send(err);
         }
-        res.json(countResult);
+        res.json({'status':'connected', 'totalEntries':countResult});
     });
 });
 
@@ -35,7 +48,7 @@ router.post('/tasks/filter', function(req, res, next) {
                 if (err){
                     res.send(err);
                 }
-                res.json(tasks);
+                res.json({'status':'connected', 'tasks':tasks});
                 // res.status(200).json(posts.data);
             });
 });
@@ -65,12 +78,12 @@ function filtersTreatment(filters, user_id) {
 /**
  * Get single task by id
  */
-router.get('/task/:id', function(req, res, next) {
+router.get('/tasks/:id', function(req, res, next) {
     dbTask.findOne({_id: ObjectId(req.params.id)}, function (err, task) {
         if (err){
             res.send(err);
         }
-        res.json(task);
+        res.json({'status':'connected', 'task':task});
     });
 });
 
@@ -78,7 +91,7 @@ router.get('/task/:id', function(req, res, next) {
  * Save task with current user
  * Emit instructions
  */
-router.post('/task', function(req, res, next) {
+router.post('/tasks/create', function(req, res, next) {
     var task = req.body;
     task.user = ObjectId(req.user[0]._id);
 
@@ -93,7 +106,7 @@ router.post('/task', function(req, res, next) {
                 res.send(err);
             }
             req.app.io.emit('addTask', task);
-            res.json(task);
+            res.json({'status':'connected', 'task':task});
         })
     }
 });
@@ -102,21 +115,21 @@ router.post('/task', function(req, res, next) {
  * Delete task
  * Emit instructions
  */
-router.delete('/task/:id', function(req, res, next) {
+router.delete('/tasks/:id', function(req, res, next) {
     var task = {'id': req.params.id, 'user': ObjectId(req.user[0]._id)};
     req.app.io.emit('deleteTask', task);
     dbTask.remove({_id: ObjectId(req.params.id)}, function (err, task) {
         if (err){
             res.send(err);
         }
-        res.json(task);
+        res.json({'status':'connected', 'task':task});
     });
 });
 
 /**
  * Update task with id
  */
-router.put('/task/:id', function(req, res, next) {
+router.put('/tasks/:id', function(req, res, next) {
     var task = req.body;
     task.user = ObjectId(req.user[0]._id);
     req.app.io.emit('checkTask', task);
@@ -137,14 +150,15 @@ router.put('/task/:id', function(req, res, next) {
     if (!updTask) {
         res.status(400);
         res.json({
-            "error":"Bad Data"
+            'status':'connected',
+            'error':'Bad Data'
         });
     } else {
         dbTask.update({_id: ObjectId(req.params.id)}, updTask, {}, function (err, task) {
             if (err){
                 res.send(err);
             }
-            res.json(task);
+            res.json({'status':'connected', 'task':task});
         });
     }
 });
