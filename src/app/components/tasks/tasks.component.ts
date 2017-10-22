@@ -4,7 +4,7 @@ import { Task } from '../../../models/Task';
 import { Paginator } from '../../../models/Paginator';
 import { Filters } from '../../../models/Filters';
 import { Socket } from 'ng2-socket-io';
-import { CanActivate } from '@angular/router';
+import { CanActivate, Router } from '@angular/router';
 import { UsersService } from '../../services/users.service';
 import {User} from "../../../models/User";
 
@@ -29,7 +29,7 @@ export class TasksComponent implements OnInit {
   filters: Filters;
   user: User;
 
-  constructor(private usersService:UsersService, private tasksService: TasksService, private socket: Socket) {
+  constructor(private usersService:UsersService, private tasksService: TasksService, private socket: Socket, private router:Router) {
     console.log('Construct task');
   }
 
@@ -56,7 +56,6 @@ export class TasksComponent implements OnInit {
     this.user = this.usersService.getCurrentUserValue();
     this.listenerUserService();
   }
-
 
   listenerUserService() {
     this.usersService.getUser().subscribe((user: User) => {
@@ -94,24 +93,32 @@ export class TasksComponent implements OnInit {
     this.countPerPage = 10;
     this.currentPage = number;
 
-    this.tasksService.getTasks(this.currentPage, this.countPerPage, this.filters).subscribe(tasks => {
-      this.tasks = tasks;
+    this.tasksService.getTasks(this.currentPage, this.countPerPage, this.filters).subscribe(responces => {
+      if (responces.status == 'connected') {
+        this.tasks = responces.tasks;
+      } else {
+        this.router.navigate(['login']);
+      }
     });
 
-    this.tasksService.countAllTasks(this.filters).subscribe(totalEntries => {
-      this.totalEntries = totalEntries;
-      this.numberPages = totalEntries / this.countPerPage;
-      this.intervalEntriesMax = this.currentPage * this.countPerPage;
-      if (this.intervalEntriesMax > this.totalEntries)
-      {
-        this.intervalEntriesMax = this.totalEntries;
+    this.tasksService.countAllTasks(this.filters).subscribe(responces => {
+      if (responces.status == 'connected') {
+        this.totalEntries = responces.totalEntries;
+        this.numberPages = responces.totalEntries / this.countPerPage;
+        this.intervalEntriesMax = this.currentPage * this.countPerPage;
+        if (this.intervalEntriesMax > this.totalEntries)
+        {
+          this.intervalEntriesMax = this.totalEntries;
+        }
+        this.intervalEntriesMin = this.intervalEntriesMax - this.countPerPage + 1;
+        if (this.intervalEntriesMin < 1)
+        {
+          this.intervalEntriesMin = 0;
+        }
+        this.createPagesNumber(this.numberPages);
+      } else {
+        this.router.navigate(['login']);
       }
-      this.intervalEntriesMin = this.intervalEntriesMax - this.countPerPage + 1;
-      if (this.intervalEntriesMin < 1)
-      {
-        this.intervalEntriesMin = 0;
-      }
-      this.createPagesNumber(this.numberPages);
     });
   }
 
@@ -140,8 +147,12 @@ export class TasksComponent implements OnInit {
       isDone: false
     };
 
-    this.tasksService.addTask(newTask).subscribe(task => {
-      this.title = "";
+    this.tasksService.addTask(newTask).subscribe(responces => {
+      if (responces.status == 'connected') {
+        this.title = "";
+      } else {
+        this.router.navigate(['login']);
+      }
     });
   }
 
@@ -175,8 +186,10 @@ export class TasksComponent implements OnInit {
       isDone: !task.isDone
     };
 
-    this.tasksService.updateStatus(_task).subscribe(task => {
-
+    this.tasksService.updateStatus(_task).subscribe(responces => {
+      if (responces.status != 'connected') {
+        this.router.navigate(['login']);
+      }
     });
   }
 
@@ -206,8 +219,10 @@ export class TasksComponent implements OnInit {
    */
   deleteTask(taskId) {
     // event.preventDefault();
-    this.tasksService.deleteTask(taskId).subscribe(data => {
-
+    this.tasksService.deleteTask(taskId).subscribe(responces => {
+      if (responces.status != 'connected') {
+        this.router.navigate(['login']);
+      }
     });
   }
 

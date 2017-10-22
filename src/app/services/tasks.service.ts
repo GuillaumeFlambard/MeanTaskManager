@@ -17,19 +17,19 @@ export class TasksService {
   updateStatus(task) {
       let headers = new Headers();
       headers.append('Content-Type', 'application/json');
-      return this.http.put('/api/task/' + task._id, JSON.stringify(task), {headers: headers})
+      return this.http.put('/api/tasks/' + task._id, JSON.stringify(task), {headers: headers})
           .map(res => res.json());
   }
 
   deleteTask(taskId) {
-      return this.http.delete('/api/task/' + taskId)
+      return this.http.delete('/api/tasks/' + taskId)
           .map(res => res.json());
   }
 
   addTask(task) {
       let headers = new Headers();
       headers.append('Content-Type', 'application/json');
-        return this.http.post('/api/task', JSON.stringify(task), {headers: headers})
+        return this.http.post('/api/tasks/create', JSON.stringify(task), {headers: headers})
           .map(res => res.json());
   }
 
